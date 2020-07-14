@@ -4,18 +4,25 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, current_user, logout_user
 from flask_socketio import SocketIO, join_room, leave_room, send
 
-from wtform import *
-from models import *
+from flask_sqlalchemy  import SQLAlchemy
+
 
 # Configure app
 app = Flask(__name__)
-app.secret_key=os.environ.get('SECRET')
+#app.secret_key=os.environ.get('SECRET')=
+app.secret_key="i havte to code"
 app.config['WTF_CSRF_SECRET_KEY'] = "b'f\xfa\x8b{X\x8b\x9eM\x83l\x19\xad\x84\x08\xaa"
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL')
+#app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+from wtform import *
+from models import *
+
+
+
 
 # Initialize login manager
 login = LoginManager(app)
@@ -128,4 +135,5 @@ def on_leave(data):
     send({"msg": username + " has left the room"}, room=room)
 
 if __name__ == "__main__":
+    db.create_all()
     app.run()
